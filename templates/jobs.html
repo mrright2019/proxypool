@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ig-jobs</title>
+</head>
+<body>
+	<table border="1">
+	<tr>
+		<td>id</td>		
+		<td>func</td>		
+		<td>args</td>		
+		<td>trigger</td>	
+		<td>next run time</td>		
+		<td>do</td>
+		<td>remove</td>
+	</tr>
+
+   {% for message in job_list %}
+   <tr>
+   		<td>{{ message['id'] }}</td>
+   		<td>{{ message['func'] }}</td>
+   		<td>{{ message['args'] }}</td>
+   		<td>{{ message['trigger'] }}</td>
+   		<td>{{ message['next_run_time'] }}</td>
+		{% if message['next_run_time'] != None %} 
+		<td><a href="javascript:stop('{{ message['id'] }}');do_result();">stop</a> </td>
+		{% endif %}
+		{% if message['next_run_time'] == None %} 
+		<td><a href="javascript:resume('{{ message['id'] }}');do_result();"> resume </a></td>
+		{% endif %}
+		<td><a href="javascript:remove('{{ message['id'] }}');do_result();">remove</td>
+	</tr>
+	{% endfor %}
+
+</table>
+
+
+<a href="add">add a job</a>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="application/javascript" >
+	function stop(jid){
+		$.post("stop",{'jid':jid},function(result){
+			do_result();
+	    },'json');
+	};
+
+	function do_result(){
+		location.reload();
+	};
+
+
+	function resume(jid){
+		$.post("resume",{'jid':jid},function(data){
+			alert(data);
+	    },'json');
+	};
+
+	function remove(jid){
+		$.post("remove",{'jid':jid},function(data){
+			alert(data);
+	    },'json');
+	}
+
+</script>
+
+</html>
